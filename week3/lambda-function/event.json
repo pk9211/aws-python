@@ -1,0 +1,4 @@
+{
+	"SOURCE_BUCKET": "gridmaker-image-input",
+	"DESTINATION_BUCKET": "gridmaker-image-destination"
+}

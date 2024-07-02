@@ -1,0 +1,57 @@
+
+##########################################################################
+
+## add_images flow
+
+cd add_image
+
+pip install -r requirements.txt --target ./package
+
+cd ./package
+
+zip -r ~/add-image.zip .
+
+cd ..
+zip ~/add-image.zip app.py
+
+aws lambda update-function-code --function-name add_image --zip-file fileb://~/add-image.zip --publish
+
+aws lambda update-function-configuration --function-name add_image --environment "
+Variables={SOURCE_BUCKET=image-input-bucket}"
+
+##########################################################################
+
+## generate_grid_flow
+
+cd generate_grid
+pip install -r requirements.txt --target ./package
+
+cd ./package
+zip -r ~/generate-grid.zip .
+
+cd ..
+zip ~/generate-grid.zip app.py
+
+aws lambda update-function-code --function-name generate_grid --zip-file fileb://~/genrate_grid.zip --publish
+
+aws lambda update-function-configuration --function-name generate_grid --environment "Variables={SOURCE_BUCKET=image-input-bucket,DESTINATION_BUCKET=image-destination}"
+
+
+##########################################################################
+### AWS API Gateway
+
+curl -XPOST --data-binary @image001.jpeg "https://1w1ghh7ra2.execute-api.us-east-1.amazonaws.com/add?uniqueGridId=5678"
+curl -XPOST --data-binary @image002.jpeg "https://1w1ghh7ra2.execute-api.us-east-1.amazonaws.com/add?uniqueGridId=5678"
+curl -XPOST --data-binary @image003.jpeg "https://1w1ghh7ra2.execute-api.us-east-1.amazonaws.com/add?uniqueGridId=5678"
+curl -XPOST --data-binary @image004.jpeg "https://1w1ghh7ra2.execute-api.us-east-1.amazonaws.com/add?uniqueGridId=5678"
+
+curl -XGET "https://1w1ghh7ra2.execute-api.us-east-1.amazonaws.com/generate_grid?uniqueGridId=5678"
+
+
+
+
+
+
+
+
+##########################################################################
